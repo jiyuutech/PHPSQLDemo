@@ -1,0 +1,355 @@
+<div class="content-header">
+  <div class="container-fluid">
+    <div class="row mb-2">
+      <div class="col-sm-6">
+        <h1 class="m-0">Person Profile</h1>
+      </div>
+      <!-- /.col -->
+      <!-- /.col -->
+    </div>
+    <!-- /.row -->
+  </div>
+  <!-- /.container-fluid -->
+</div>
+<!-- /.content-header -->
+
+<!-- Main content -->
+<section class="content">
+  <div class="container-fluid">
+    <div class="row mb-2">
+      <div class="col-sm-12">
+        <button
+          type="button"
+          id="addrow"
+          data-toggle="modal"
+          data-target="#modelId"
+          class="btn btn-primary"
+        >
+          Add Profile
+        </button>
+      </div>
+    </div>
+    <table class="table table-dark">
+      <thead>
+        <tr>
+          <th scope="col">ID</th>
+          <th scope="col">First Name</th>
+          <th scope="col">Last Name</th>
+          <th scope="col">Middle Name</th>
+          <th scope="col">Gender</th>
+          <th scope="col">Address</th>
+          <th scope="col">Action</th>
+        </tr>
+      </thead>
+      <tbody id="items"></tbody>
+
+      <!-- Modal -->
+    </table>
+    <div
+      class="modal fade"
+      id="modelId"
+      tabindex="-1"
+      role="dialog"
+      aria-labelledby="modelTitleId"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Profile</h5>
+            <button
+              type="button"
+              class="close"
+              data-dismiss="modal"
+              aria-label="Close"
+            >
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <form id="profile" class="needs-validation" novalidate>
+              <input type="hidden" name="profileid" id="profileid" value="0" />
+              <div class="form-group">
+                <label for="firstname">First Name *</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  name="firstname"
+                  id="firstname"
+                  placeholder="Enter First Name"
+                  required
+                />
+                <div class="valid-feedback">All goods!</div>
+                <div class="invalid-feedback">
+                  Please provide a valid first name.
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="lastname">Last Name *</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  name="lastname"
+                  id="lastname"
+                  placeholder="Enter Last Name"
+                  required
+                />
+                <div class="valid-feedback">All goods!</div>
+                <div class="invalid-feedback">
+                  Please provide a valid last name.
+                </div>
+              </div>
+
+              <div class="form-group">
+                <label for="middlename">Middle Name</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  name="middlename"
+                  id="middlename"
+                  placeholder="Enter Middle Name"
+                />
+              </div>
+
+              <div class="form-group">
+                <select id="gender" name="gender" class="custom-select">
+                  <option value="">Select Gender *</option>
+                  <option value="M">Male</option>
+                  <option value="F">Female</option>
+                </select>
+                <div class="valid-feedback">All goods!</div>
+                <div class="invalid-feedback">Please select a gender.</div>
+              </div>
+
+              <div class="form-group">
+                <label for="address">Address *</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  name="address"
+                  id="address"
+                  placeholder="Street, Barangay, City, Province, Country"
+                  required
+                />
+                <div class="valid-feedback">All goods!</div>
+                <div class="invalid-feedback">Please provide an address.</div>
+              </div>
+              <div class="modal-footer">
+                <button
+                  type="button"
+                  class="btn btn-secondary"
+                  data-dismiss="modal"
+                >
+                  Close
+                </button>
+                <button type="submit" class="btn btn-primary" id="save">
+                  Save
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<script>
+  $(function () {
+    //get all person profile
+    function getAllPersonProfile() {
+      $.ajax({
+        url: "api/read.php",
+        method: "GET",
+        success: function (response) {
+          //loop through the list of person profile
+          $(document).Toasts("create", {
+            class: "bg-success",
+            title: "Success",
+            subtitle: "Success",
+            autohide: true,
+            delay: 5000,
+            body: "Successfully retrieved all person profile.",
+          });
+          $("#items").empty();
+          response.data.forEach((row) => {
+            $("#items").append(`
+                  <tr>
+                      <td>${row.profileid}</td>
+                      <td>${row.firstname}</td>
+                      <td>${row.lastname}</td>
+                      <td>${row.middlename}</td>
+                      <td>${row.gender}</td>
+                      <td>${row.address}</td>
+                      <td><button type="button" id="editRow" class="btn btn-warning" >Edit</button>
+                      <button type="button" id="deleteRow" class="btn btn-danger" >Delete</button></td>
+                  </tr>
+              `);
+          });
+        },
+        error: function (error) {
+          console.log(error);
+        },
+      });
+    }
+
+    getAllPersonProfile();
+
+    $("form").submit(function (event) {
+      //validate form
+      if (this.checkValidity() === false) {
+        //enter if the form is not valid
+        event.preventDefault();
+        event.stopPropagation();
+      } else {
+        event.preventDefault();
+        event.stopPropagation();
+        //create/update routine
+        let formdata = $(this).serializeArray();
+        // console.log(formdata);
+        // {firstname:"John"}
+
+        //array to object
+        let data = {};
+        $(formdata).each(function (index, obj) {
+          data[obj.name] = obj.value;
+        });
+        // console.log(data);
+
+        if (data.profileid == 0) {
+          //create
+          $.ajax({
+            url: "api/create.php",
+            method: "POST",
+            data: data,
+            success: function (response) {
+              $(document).Toasts("create", {
+                class: "bg-success",
+                title: "Success",
+                subtitle: "Success",
+                autohide: true,
+                delay: 5000,
+                body: "Profile successfully created.",
+              });
+            },
+            error: function (error) {
+              $(document).Toasts("create", {
+                class: "bg-danger",
+                title: "Error",
+                subtitle: "Error",
+                autohide: true,
+                delay: 5000,
+                body: "Profile not created.",
+              });
+            },
+          });
+        } else {
+          //update
+          $.ajax({
+            url: "api/update.php",
+            method: "POST",
+            data: data,
+            success: function (response) {
+              $(document).Toasts("create", {
+                class: "bg-success",
+                title: "Success",
+                subtitle: "Success",
+                autohide: true,
+                delay: 5000,
+                body: "Profile successfully updated.",
+              });
+            },
+            error: function (error) {
+              $(document).Toasts("create", {
+                class: "bg-danger",
+                title: "Error",
+                subtitle: "Error",
+                autohide: true,
+                delay: 5000,
+                body: "Profile not updated.",
+              });
+            },
+          });
+        }
+        getAllPersonProfile();
+        $("#modelId").modal("hide");
+        clearform();
+      }
+      this.classList.add("was-validated");
+    });
+
+    $(document).on("click", "#editRow", function () {
+      clearform();
+      let row = $(this).parents("tr")[0];
+      $("#modelId").modal("show");
+
+      //populate form data with table data
+      $.ajax({
+        url: "api/read.php",
+        method: "GET",
+        data: {
+          profileid: $(row).find("td:eq(0)").text(),
+        },
+        success: function (response) {
+          let row = response.data[0];
+          $("#profileid").val(row.profileid);
+          $("#firstname").val(row.firstname);
+          $("#lastname").val(row.lastname);
+          $("#middlename").val(row.middlename);
+          $("#gender").val(row.gender);
+          $("#address").val(row.address);
+        },
+        error: function (error) {
+          $(document).Toasts("create", {
+            class: "bg-danger",
+            title: "Error",
+            subtitle: "Error",
+            autohide: true,
+            delay: 5000,
+            body: "Profile not found.",
+          });
+        },
+      });
+    });
+
+    $(document).on("click", "#deleteRow", function () {
+      let row = $(this).parents("tr")[0];
+      $.ajax({
+        url: "api/delete.php",
+        method: "POST",
+        data: {
+          profileid: $(row).find("td:eq(0)").text(),
+        },
+        success: function (response) {
+          $(this).parents("tr").first().remove();
+          $(document).Toasts("create", {
+            class: "bg-success",
+            title: "Success",
+            subtitle: "Success",
+            autohide: true,
+            delay: 5000,
+            body: "Profile successfully deleted.",
+          });
+          getAllPersonProfile();
+        },
+        error: function (error) {
+          $(document).Toasts("create", {
+            class: "bg-danger",
+            title: "Error",
+            subtitle: "Error",
+            autohide: true,
+            delay: 5000,
+            body: "Profile not deleted.",
+          });
+        },
+      });
+    });
+  });
+
+  function clearform() {
+    $("#profileid").val("");
+    $("#firstname").val("");
+    $("#lastname").val("");
+  }
+</script>
