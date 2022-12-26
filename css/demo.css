@@ -1,0 +1,20 @@
+
+.jumbotron{
+    background-image:url(https://architizer-prod.imgix.net/media/mediadata/uploads/16476009739122022_01_19_Photo_-_3.jpg) ;
+    height: 500px;
+}
+.jumbotron h1{
+    font-size: 83px;
+    background-color:rgba(169, 169, 169, 0.548);
+    border-radius: 10px;
+    padding: 10px;
+}
+
+.card-body p{
+    color: black;
+}
+
+#home{
+    background-color: rgba(118, 120, 122, 0.705);
+    border-radius: 10px;
+}
