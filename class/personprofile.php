@@ -44,7 +44,7 @@ class PersonProfile {
     public function getAllProfileACAD(){
         // Get all records from the database
         mysqli_next_result($this->connection);
-        $statement2 = $this->connection->prepare("SELECT * FROM studentprofile where category='ACADEMIC STRAND'");
+        $statement2 = $this->connection->prepare("SELECT * FROM studentprofile where category='ACADEMIC TRACK'");
 
         if($statement2->execute()){
             $result2 = $statement2->get_result();
@@ -56,7 +56,7 @@ class PersonProfile {
     public function getAllProfileTVL(){
         // Get all records from the database
         mysqli_next_result($this->connection);
-        $statement2 = $this->connection->prepare("SELECT * FROM studentprofile where category='TECHNICAL-VOCATIONAL-LIVELIHOOD STRAND (TVL)'");
+        $statement2 = $this->connection->prepare("SELECT * FROM studentprofile where category='TECHNICAL-VOCATIONAL-LIVELIHOOD (TVL) TRACK'");
 
         if($statement2->execute()){
             $result2 = $statement2->get_result();
@@ -79,7 +79,7 @@ class PersonProfile {
         $this->gender=htmlspecialchars(strip_tags($this->gender));
         $this->email=htmlspecialchars(strip_tags($this->email));
         $this->address=htmlspecialchars(strip_tags($this->address));
-     
+        $this->category=htmlspecialchars(strip_tags($this->category));
 
         if($statement->execute()){
             $statement->close();
@@ -107,6 +107,7 @@ class PersonProfile {
          $this->gender=htmlspecialchars(strip_tags($this->gender));
          $this->email=htmlspecialchars(strip_tags($this->email));
          $this->address=htmlspecialchars(strip_tags($this->address));
+         $this->category=htmlspecialchars(strip_tags($this->category));
    
          if($statement->execute()){
              $statement->close();
