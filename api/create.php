@@ -13,17 +13,22 @@ include_once PROJECT_ROOT_PATH . '../class/personprofile.php';
 $database = new Database();
 $db = $database->getConnection();
 // initialize object
-$personprofile = new PersonProfile($db);
+$enrollmentinfo = new PersonProfile($db);
 
+//echo $_POST['firstname'];
 // get posted data and assign to properties of object
-$personprofile->firstname = $_POST['firstname'];
-$personprofile->lastname = $_POST['lastname'];
-$personprofile->middlename = $_POST['middlename'];
-$personprofile->gender = $_POST['gender'];
-$personprofile->address = $_POST['address'];
+$enrollmentinfo->firstname = $_POST['firstname'];
+$enrollmentinfo->lastname = $_POST['lastname'];
+$enrollmentinfo->middlename = $_POST['middlename'];
+$enrollmentinfo->birthdate = $_POST['birthdate'];
+$enrollmentinfo->gender = $_POST['fullGender'];
+$enrollmentinfo->email = $_POST['email'];
+$enrollmentinfo->address = $_POST['address'];
+$enrollmentinfo->category = $_POST['fullcat'];
+
 
 // create the person profile
-if($personprofile->create()){
+if($enrollmentinfo->create()){
     http_response_code(201);
     echo json_encode(array("message" => "Person Profile was created."));
 } else{

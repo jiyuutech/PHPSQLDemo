@@ -14,11 +14,11 @@ include_once PROJECT_ROOT_PATH . '../class/personprofile.php';
 $database = new Database();
 $db = $database->getConnection();
 // initialize object
-$personprofile = new PersonProfile($db);
+$enrollmentinfo = new PersonProfile($db);
 
-$personprofile->profileid = $_POST['profileid'];
+$enrollmentinfo->profileid = $_POST['profileid'];
 
-if($personprofile->delete()){
+if($enrollmentinfo->delete()){
     http_response_code(201);
     echo json_encode(array("message" => "Person Profile was deleted."));
 } else{

@@ -21,8 +21,11 @@ $personprofile->profileid = $_POST['profileid'];
 $personprofile->firstname = $_POST['firstname'];
 $personprofile->lastname = $_POST['lastname'];
 $personprofile->middlename = $_POST['middlename'];
-$personprofile->gender = $_POST['gender'];
+$personprofile->birthdate = $_POST['birthdate'];
+$personprofile->gender = $_POST['fullGender'];
+$personprofile->email = $_POST['email'];
 $personprofile->address = $_POST['address'];
+$personprofile->category =$_POST['fullcat'];
 
 // update the person profile
 if($personprofile->update()){

@@ -10,19 +10,12 @@ include_once PROJECT_ROOT_PATH . '../class/personprofile.php';
 $database = new Database();
 $db = $database->getConnection();
 // initialize object
-$personprofile = new PersonProfile($db);
+$personprofileacad = new PersonProfile($db);
 
-
-
-$personprofile->profileid = isset($_GET['profileid']) ? $_GET['profileid'] : 0;
 $result = null;
 
+    $result = $personprofileacad->getAllProfileACAD();
 
-if(isset($_GET['profileid'])){
-    $result = $personprofile->getProfileById();
-}else{
-    $result = $personprofile->getAllProfile();
-}
 
 if($result->num_rows > 0){
 
