@@ -1,8 +1,8 @@
-<div class="content-header">
+<div  class="content-header">
   <div class="container-fluid">
     <div class="row mb-2">
       <div class="col-sm-6">
-        <h1 class="m-0">Person Profile</h1>
+        <h1 class="m-0">Enrolled Students</h1>
       </div>
       <!-- /.col -->
       <!-- /.col -->
@@ -25,7 +25,7 @@
           data-target="#modelId"
           class="btn btn-primary"
         >
-          Add Profile
+          Add Student
         </button>
       </div>
     </div>
@@ -36,9 +36,13 @@
           <th scope="col">First Name</th>
           <th scope="col">Last Name</th>
           <th scope="col">Middle Name</th>
+          <th scope="col">Birth Date</th>
           <th scope="col">Gender</th>
           <th scope="col">Address</th>
+          <th scope="col">Email</th>
+          <th scope="col">Category</th>
           <th scope="col">Action</th>
+          
         </tr>
       </thead>
       <tbody id="items"></tbody>
@@ -56,7 +60,7 @@
       <div class="modal-dialog" role="document">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title">Profile</h5>
+            <h5 class="modal-title">Enrollment Form</h5>
             <button
               type="button"
               class="close"
@@ -67,6 +71,7 @@
             </button>
           </div>
           <div class="modal-body">
+            <h3>Student Info</h3>
             <form id="profile" class="needs-validation" novalidate>
               <input type="hidden" name="profileid" id="profileid" value="0" />
               <div class="form-group">
@@ -111,15 +116,49 @@
                   placeholder="Enter Middle Name"
                 />
               </div>
+              
+              <div class="form-group">
+                <label for="birthdate">Birth Date</label>
+                <input
+                  type="date"
+                  class="form-control"
+                  name="birthdate"
+                  id="birthdate"
+                />
+              </div>
 
+              <input type="hidden" name="fullGender" id="fullGender"/>
               <div class="form-group">
                 <select id="gender" name="gender" class="custom-select">
                   <option value="">Select Gender *</option>
-                  <option value="M">Male</option>
-                  <option value="F">Female</option>
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
                 </select>
                 <div class="valid-feedback">All goods!</div>
                 <div class="invalid-feedback">Please select a gender.</div>
+              </div>
+
+              <div class="form-group">
+                <label for="email">Email</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  name="email"
+                  id="email"
+                  placeholder="Enter Email Address"
+                />
+              </div>
+
+              <input type="hidden" name="fullcat" id="fullcat"/>
+              <div class="form-group">
+                <label for="category">Category</label>
+                <select id="category" name="category" class="custom-select">
+                  <option value="">Select Category *</option>
+                  <option value="ACADEMIC STRAND">ACADEMIC STRAND</option>
+                  <option value="TECHNICAL-VOCATIONAL-LIVELIHOOD STRAND (TVL)">TECHNICAL-VOCATIONAL-LIVELIHOOD STRAND (TVL)</option>
+                </select>
+                <div class="valid-feedback">All goods!</div>
+                <div class="invalid-feedback">Please select a category.</div>
               </div>
 
               <div class="form-group">
@@ -135,6 +174,15 @@
                 <div class="valid-feedback">All goods!</div>
                 <div class="invalid-feedback">Please provide an address.</div>
               </div>
+
+              
+
+            
+
+             
+
+              
+              
               <div class="modal-footer">
                 <button
                   type="button"
@@ -157,6 +205,8 @@
 
 <script>
   $(function () {
+
+  
     //get all person profile
     function getAllPersonProfile() {
       $.ajax({
@@ -169,7 +219,7 @@
             title: "Success",
             subtitle: "Success",
             autohide: true,
-            delay: 5000,
+            delay: 2500,
             body: "Successfully retrieved all person profile.",
           });
           $("#items").empty();
@@ -180,8 +230,11 @@
                       <td>${row.firstname}</td>
                       <td>${row.lastname}</td>
                       <td>${row.middlename}</td>
+                      <td>${row.birthdate}</td>
                       <td>${row.gender}</td>
                       <td>${row.address}</td>
+                      <td>${row.email}</td>
+                      <td>${row.category}</td>
                       <td><button type="button" id="editRow" class="btn btn-warning" >Edit</button>
                       <button type="button" id="deleteRow" class="btn btn-danger" >Delete</button></td>
                   </tr>
@@ -224,22 +277,24 @@
             method: "POST",
             data: data,
             success: function (response) {
+             
               $(document).Toasts("create", {
                 class: "bg-success",
                 title: "Success",
                 subtitle: "Success",
                 autohide: true,
-                delay: 5000,
+                delay: 2500,
                 body: "Profile successfully created.",
               });
             },
             error: function (error) {
+              console.log(error);
               $(document).Toasts("create", {
                 class: "bg-danger",
                 title: "Error",
                 subtitle: "Error",
                 autohide: true,
-                delay: 5000,
+                delay: 2500,
                 body: "Profile not created.",
               });
             },
@@ -256,9 +311,10 @@
                 title: "Success",
                 subtitle: "Success",
                 autohide: true,
-                delay: 5000,
+                delay: 2500,
                 body: "Profile successfully updated.",
               });
+              // getAllPersonProfile();
             },
             error: function (error) {
               $(document).Toasts("create", {
@@ -266,7 +322,7 @@
                 title: "Error",
                 subtitle: "Error",
                 autohide: true,
-                delay: 5000,
+                delay: 2500,
                 body: "Profile not updated.",
               });
             },
@@ -297,8 +353,11 @@
           $("#firstname").val(row.firstname);
           $("#lastname").val(row.lastname);
           $("#middlename").val(row.middlename);
+          $("#birthdate").val(row.birthdate);
           $("#gender").val(row.gender);
+          $("#email").val(row.email);
           $("#address").val(row.address);
+          $("#category").val(row.category);
         },
         error: function (error) {
           $(document).Toasts("create", {
@@ -306,7 +365,7 @@
             title: "Error",
             subtitle: "Error",
             autohide: true,
-            delay: 5000,
+            delay: 2500,
             body: "Profile not found.",
           });
         },
@@ -328,7 +387,7 @@
             title: "Success",
             subtitle: "Success",
             autohide: true,
-            delay: 5000,
+            delay: 2500,
             body: "Profile successfully deleted.",
           });
           getAllPersonProfile();
@@ -339,17 +398,54 @@
             title: "Error",
             subtitle: "Error",
             autohide: true,
-            delay: 5000,
+            delay: 2500,
             body: "Profile not deleted.",
           });
         },
       });
     });
+
+    $("[name=gender]").change(function() {
+        $("#fullGender").val($("[name=gender] option:selected").text());
+    });
+
+    $("[name=category]").change(function() {
+        $("#fullcat").val($("[name=category] option:selected").text());
+    });
+
   });
 
   function clearform() {
     $("#profileid").val("");
     $("#firstname").val("");
     $("#lastname").val("");
+    $("#middlename").val("");
+    $("#birthdate").val("");
+    $("#gender").val("");
+    $("#fullGender").val("");
+    $("#email").val("");
+    $("#category").val("");
+    $("#fullcat").val("");
+    $("#address").val("");
+
   }
+
+  function addLRN(){
+
+    var strDate = "30.11.2019";
+    var lastdigit = strDate.slice(-2);
+ let x = Math.floor((Math.random() * 10) + 1);
+    //var lrn  = 
+
+  
+
+
+    }
+
+
+   
+
+
+   // $("#profileid").val(LRN);
+   // alert(addLRN());
 </script>
